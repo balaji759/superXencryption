@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Secure Python file encryption tool with advanced protection algorithms. Protect your Python code with SHA-512, double XOR, and byte shuffling.">
+    <meta name="keywords" content="python encryption, code protection, secure python, file encryption, python security">
+    <title>PyShield Pro | Advanced Python File Encryption</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --accent: #fd79a8;
+            --success: #00b894;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            width: 280px;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .feature h3 {
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+        
+        .feature p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .upload-area {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .upload-area.active {
+            border-color: var(--success);
+            background: rgba(0, 184, 148, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .upload-icon::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            opacity: 0.2;
+            filter: blur(20px);
+        }
+        
+        .upload-text h2 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .upload-text p {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: none;
+            outline: none;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-glow {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(108, 92, 231, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(108, 92, 231, 0);
+            }
+        }
+        
+        .loading {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+        }
+        
+        .loading.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 2rem;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            width: 80%;
+            max-width: 300px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+        
+        .dots {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .dot {
+            width: 15px;
+            height: 15px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: dotPulse 1.5s infinite ease-in-out;
+        }
+        
+        .dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes dotPulse {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+                background: var(--accent);
+            }
+        }
+        
+        .ad-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .ad-label {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: linear-gradient(145deg, #1e1e2e, #2a2a3a);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+            animation: bounce 0.5s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .modal h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+        
+        .modal p {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .modal-time {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-btn {
+            background: linear-gradient(to right, var(--success), #55efc4);
+            color: var(--dark);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(0, 184, 148, 0.3);
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 184, 148, 0.4);
+        }
+        
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .file-info.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .feature {
+                width: 100%;
+            }
+            
+            .upload-area {
+                padding: 2rem 1rem;
+            }
+            
+            .upload-icon {
+                font-size: 3rem;
+            }
+            
+            .upload-text h2 {
+                font-size: 1.5rem;
+            }
+            
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .modal h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Floating Button Styles */
+        .floating-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+        
+        #floating-btn {
+            display: none;
+        }
+        
+        .floating-redes a, .floating-icon-mas2 {
+            display: block;
+            text-decoration: none;
+            background: black;
+            color: #fff;
+            width: 55px;
+            height: 55px;
+            line-height: 55px;
+            text-align: center;
+            border-radius: 50%;
+            box-shadow: 0px 1px 10px rgba(0,0,0,0.4);
+            transition: all 500ms ease;
+        }
+        
+        .floating-redes a:hover {
+            background: #fff;
+            color: #cc2b2b;
+        }
+        
+        .floating-redes a {
+            margin-bottom: -15px;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        #floating-btn:checked~ .floating-redes a {
+            margin-bottom: 10px;
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .floating-icon-mas2 {
+            cursor: pointer;
+            background: black;
+            font-size: 23px;
+        }
+        
+        #floating-btn:checked ~ .floating-btn-mas .floating-icon-mas2 {
+            transform: rotate(137deg);
+            font-size: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <header>
+            <h1>PyShield Pro</h1>
+            <p class="tagline">Advanced Python File Encryption with SHA-512 & Double XOR Protection</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-lock"></i>
+                    <h3>Military-Grade Encryption</h3>
+                    <p>SHA-512 hashing combined with double XOR encryption for maximum security</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-random"></i>
+                    <h3>Byte Shuffling</h3>
+                    <p>Double byte shuffling algorithm makes reverse engineering extremely difficult</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Lightning Fast</h3>
+                    <p>Optimized algorithms encrypt your files in milliseconds</p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <!-- Google AdSense Ad Unit -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_ADSENSE_ID"
+                 data-ad-slot="YOUR_AD_SLOT_ID"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+                <i class="fas fa-file-code"></i>
+            </div>
+            <div class="upload-text">
+                <h2>Protect Your Python Code</h2>
+                <p>Upload your .py file and we'll encrypt it with advanced algorithms to prevent unauthorized access and reverse engineering.</p>
+            </div>
+            <button class="btn btn-glow" id="uploadBtn">
+                <i class="fas fa-file-upload"></i> Choose Your .py File
+            </button>
+            <input type="file" id="fileInput" accept=".py" style="display: none;">
+            
+            <div class="file-info" id="fileInfo">
+                <div id="fileName"></div>
+                <div id="fileSize"></div>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div class="loading-text">Encrypting your file...</div>
+                <div class="dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ad-container">
+            <div class="ad-label">Sponsored</div>
+            <!-- Second Ad Unit -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_ADSENSE_ID"
+                 data-ad-slot="YOUR_SECOND_AD_SLOT_ID"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 PyShield Pro | All Rights Reserved</p>
+            <p>Created with ❤️ by Balaji</p>
+        </footer>
+    </div>
+    
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Encryption Complete!</h2>
+            <p>Your Python file has been successfully encrypted with advanced protection.</p>
+            <div class="modal-time" id="encryptionTime"></div>
+            <button class="modal-btn" id="downloadBtn">
+                <i class="fas fa-download"></i> Download Encrypted File
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Button -->
+    <div class="floating-container">
+        <input type="checkbox" id="floating-btn">
+        <div class="floating-redes">
+            <a href="https://www.youtube.com/@errorplugs" target="_blank" class="fab fa-youtube"></a>
+            <a href="https://www.github.com/balaji579" target="_blank" class="fab fa-github"></a>
+            <a href="https://t.me/v_4tx" target="_blank" class="fab fa-telegram"></a>
+            <a href="https://clik.now/codeXbalaji" target="_blank" class="fab"><b>W</b></a>
+        </div>
+        <div class="floating-btn-mas">
+            <label for="floating-btn" class="floating-icon-mas2"><b>+</b></label>
+        </div>
+    </div>
+    
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.width = `${Math.random() * 3 + 1}px`;
+            particle.style.height = particle.style.width;
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            particlesContainer.appendChild(particle);
+        }
+        
+        // File upload functionality
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const loading = document.getElementById('loading');
+        const progressBar = document.getElementById('progressBar');
+        const successModal = document.getElementById('successModal');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const encryptionTime = document.getElementById('encryptionTime');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        
+        let encryptedFile = null;
+        let encryptionDuration = 0;
+        let secretKey = null;
+        
+        // Crypto functions (simplified version of your Python encryption)
+        function generateRandomBytes(length) {
+            const array = new Uint8Array(length);
+            crypto.getRandomValues(array);
+            return array;
+        }
+        
+        async function sha512(data) {
+            const buffer = await crypto.subtle.digest('SHA-512', data);
+            return new Uint8Array(buffer);
+        }
+        
+        function safeXorEncrypt(data, key) {
+            const result = new Uint8Array(data.length);
+            for (let i = 0; i < data.length; i++) {
+                result[i] = data[i] ^ key[i % key.length];
+            }
+            return result;
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        async function enhancedEncrypt(code) {
+            // Generate 64-byte secret key
+            secretKey = generateRandomBytes(64);
+            
+            // Generate hash key
+            const hashKey = await sha512(secretKey);
+            
+            // Convert code to bytes
+            const encoder = new TextEncoder();
+            const codeBytes = encoder.encode(code);
+            
+            // First XOR pass with first half of hash key
+            const xor1Encrypted = safeXorEncrypt(codeBytes, hashKey.slice(0, 32));
+            
+            // Second XOR pass with second half of hash key
+            const xor2Encrypted = safeXorEncrypt(xor1Encrypted, hashKey.slice(32));
+            
+            // Create and shuffle indices
+            let indices = Array.from({length: xor2Encrypted.length}, (_, i) => i);
+            indices = shuffleArray(indices);
+            indices = shuffleArray(indices); // Double shuffle
+            
+            // Shuffle the bytes
+            const shuffled = new Uint8Array(xor2Encrypted.length);
+            for (let i = 0; i < indices.length; i++) {
+                shuffled[i] = xor2Encrypted[indices[i]];
+            }
+            
+            return { encryptedData: shuffled, secretKey, indices };
+        }
+        
+        function generateLoader(encryptedData, secretKey, shuffledIndices) {
+            return `
+import hashlib
+from itertools import cycle
+
+ENCRYPTED_DATA = ${Array.from(encryptedData)}
+SHUFFLED_INDICES = ${shuffledIndices}
+SECRET_KEY = ${Array.from(secretKey)}
+
+def safe_xor_decrypt(data, key):
+    return bytes([(a ^ b) % 256 for a, b in zip(data, cycle(key))])
+
+def decrypt():
+    # Unshuffle
+    unshuffled = bytearray(len(ENCRYPTED_DATA))
+    for new_pos, original_pos in enumerate(SHUFFLED_INDICES):
+        unshuffled[original_pos] = ENCRYPTED_DATA[new_pos]
+    
+    # Generate 64-byte hash key
+    hash_key = hashlib.sha512(bytes(SECRET_KEY)).digest()
+    
+    # Reverse XOR passes
+    xor2_decrypted = safe_xor_decrypt(unshuffled, hash_key[32:])
+    original_bytes = safe_xor_decrypt(xor2_decrypted, hash_key[:32])
+    
+    return original_bytes.decode('utf-8')
+
+exec(decrypt())
+`;
+        }
+        
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', handleFileSelect);
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check if it's a Python file
+            if (!file.name.endsWith('.py')) {
+                alert('Please select a .py file');
+                return;
+            }
+            
+            // Show file info
+            fileName.textContent = `File: ${file.name}`;
+            fileSize.textContent = `Size: ${formatFileSize(file.size)}`;
+            fileInfo.classList.add('active');
+            
+            // Start encryption process
+            startEncryption(file);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        async function startEncryption(file) {
+            // Show loading animation
+            uploadArea.classList.add('active');
+            loading.classList.add('active');
+            
+            // Record start time
+            const startTime = performance.now();
+            
+            // Read the file
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const fileContent = e.target.result;
+                
+                // Update progress
+                progressBar.style.width = '30%';
+                
+                try {
+                    // Encrypt the content
+                    const { encryptedData, secretKey, indices } = await enhancedEncrypt(fileContent);
+                    
+                    // Generate loader script
+                    const loaderScript = generateLoader(encryptedData, secretKey, indices);
+                    
+                    // Update progress
+                    progressBar.style.width = '80%';
+                    
+                    // Create encrypted file
+                    encryptedFile = new Blob([loaderScript], { type: 'text/plain' });
+                    
+                    // Complete progress
+                    progressBar.style.width = '100%';
+                    
+                    // Record end time and calculate duration
+                    const endTime = performance.now();
+                    encryptionDuration = (endTime - startTime) / 1000;
+                    
+                    // Hide loading and show success modal
+                    loading.classList.remove('active');
+                    showSuccessModal();
+                } catch (error) {
+                    console.error('Encryption error:', error);
+                    alert('Encryption failed. Please try again.');
+                    resetUI();
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function showSuccessModal() {
+            // Set encryption time text
+            encryptionTime.textContent = `Encrypted in ${encryptionDuration.toFixed(2)} seconds by Balaji`;
+            
+            // Show modal
+            successModal.classList.add('active');
+            
+            // Add animation class to icon
+            const icon = document.querySelector('.modal-icon i');
+            icon.classList.add('animated');
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                icon.classList.remove('animated');
+            }, 1000);
+        }
+        
+        downloadBtn.addEventListener('click', () => {
+            if (!encryptedFile) return;
+            
+            // Create download link
+            const url = URL.createObjectURL(encryptedFile);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'codeXbalaji.py'; // Fixed filename as requested
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            // Close modal
+            successModal.classList.remove('active');
+            
+            // Reset form
+            resetUI();
+        });
+        
+        function resetUI() {
+            fileInput.value = '';
+            progressBar.style.width = '0%';
+            uploadArea.classList.remove('active');
+            fileInfo.classList.remove('active');
+            encryptedFile = null;
+        }
+        
+        // Close modal when clicking outside
+        successModal.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                successModal.classList.remove('active');
+            }
+        });
+        
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('active');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('active');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('active');
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect({ target: fileInput });
+            }
+        });
+    </script>
+</body>
+</html>
